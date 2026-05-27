@@ -137,7 +137,7 @@ if [ -z "$SCRIPT_PATH" ]; then
   exit 1
 fi
 
-PYTHON_BIN="${PYTHON_BIN:-python3}"
+PYTHON_BIN="${PYTHON_BIN:-/Users/aria/Agency/tools/book-to-skill/.venv/bin/python}"
 if ! command -v "$PYTHON_BIN" >/dev/null 2>&1; then
   PYTHON_BIN="python"
 fi
@@ -465,7 +465,7 @@ or ask the agent directly.
 ## Step 10 — Cleanup and report
 
 ```bash
-PYTHON_BIN="${PYTHON_BIN:-python3}"
+PYTHON_BIN="${PYTHON_BIN:-/Users/aria/Agency/tools/book-to-skill/.venv/bin/python}"
 if ! command -v "$PYTHON_BIN" >/dev/null 2>&1; then
   PYTHON_BIN="python"
 fi
