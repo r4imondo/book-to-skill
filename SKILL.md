@@ -308,6 +308,167 @@ mkdir -p "$SKILLS_HOME/<skill_name>/chapters"
 
 ---
 
+## Step 6.5 — Grounding Discipline (CRITICAL)
+
+Before generating any chapter summary, glossary entry, pattern, or master SKILL.md content,
+internalize this discipline. The synthesis steps (7, 8, 9) MUST respect it.
+
+### The core rule
+
+**Every framework, principle, technique, anti-pattern, number, and named tool in the
+generated skill MUST be traceable to the source `full_text.txt`.** If you cannot point
+to the line(s) in `full_text.txt` that support a claim, the claim does not belong in
+the skill — even if you "know" it from training and it is factually correct in the
+broader domain.
+
+This rule exists because the model performing the synthesis has strong priors on the
+book's domain (marketing, software, productivity, etc.) and will, by default, complete
+the book with domain knowledge it has from training. That completion is hallucination
+from the skill's perspective: the user will read it and believe "the book says X" when
+the book does not.
+
+### Faithful inference (REQUIRED) vs Training completion (FORBIDDEN)
+
+These two are different and the distinction is critical. Do not collapse into timidity
+that loses faithful inference.
+
+- **Faithful inference (DO)**: the book describes a concept without naming it, or names
+  it once and you recognize the concept in another passage. Capture it consolidated.
+  Example: the book describes step 1, 2, 3 of an approach without giving it a label —
+  you may state the approach as a coherent named framework, attributing it to the book.
+- **Training completion (DO NOT)**: the book mentions topic X; you "complete" it with
+  related-but-not-stated content from your training. The completion may be factually
+  correct, but the book did not say it.
+
+### Specific failure modes to avoid (from real audit findings)
+
+**Your task** is to faithfully extract the book's structure at the book's own level of
+abstraction. Recognizing a concept the book expresses in different words is **faithful
+inference and IS required**. Adding external knowledge the book does not contain is
+**completion and is forbidden**. When in doubt between the two, **prefer the book's
+formulation**.
+
+The patterns below are concrete failure modes observed when synthesis models convert
+books in specialist domains. Each is forbidden unless the book contains it. Read them
+as a sharpening of judgment, not as a license for timidity.
+
+1. **Product/feature terminology not in the text.** If the book discusses a problem
+   without naming the platform feature that solves it, do NOT introduce the feature
+   name as if the book had named it. (Real example from a Google Ads book audit:
+   model added "Brand exclusions PMax" as a framework, but the book only referenced
+   the underlying problem of "Search brand cannibalization" without ever naming the
+   feature.) Common categories:
+   - Vendor feature names (Brand exclusions, Enhanced Conversions, Maximize
+     Conversions, Expanded Text Ad, Local campaigns, Free listings, etc.)
+   - Web/design jargon not in the text (above-the-fold, hero section, etc.)
+   - Frameworks of the trade not named by the author (AIDA, PAS, BANT, MEDDIC, 4 Ps,
+     Cialdini principles, StoryBrand, etc.)
+
+2. **Numbers, percentages, thresholds, durations, cadences not in the text.** If the
+   book says "scale gradually", do NOT add "+10-20% per step" unless the book gives
+   the percentage. If the book says "ensure enough conversions", do NOT add ">30
+   minimum per variant" or ">100 better". If the book says "wait several weeks
+   before judging", do NOT add "2-3 weeks of good data" or "1-2 weeks between
+   steps". These thresholds and timings may be standard industry advice but they
+   are not the book's. (Real examples: "70% feed / 30% rest", ">50% mobile
+   traffic", "30/100 conv per variant test", "2-6 weeks setup", "1-3 hours
+   audit/month", "2-3 weeks of good data before scaling", "1-2 weeks observation
+   between scaling steps", "1-2 hours per client for monthly report", "30 minutes
+   initial education conversation" — all plausible, none in the book.)
+
+3. **Anti-patterns from your training, presented as the book's.** Common-sense
+   marketing or engineering errors are NOT automatically the book's anti-patterns.
+   Only include anti-patterns the book itself frames as things to avoid. (Real
+   examples added by mistake: "click fraud on Display", "landing without social
+   proof in B2B high-ticket", "CTA hidden below the fold", "long form with
+   technical fields at first-conversation stage" — all reasonable, none stated as
+   anti-patterns in the book.)
+
+4. **Didactic metaphors and analogies you invent.** Even if your metaphor clarifies
+   the book's concept, presenting it inside the skill makes the user think "this
+   metaphor is in the book". Either omit metaphors of your own creation, or label
+   them explicitly as your gloss (see labelling convention below). (Real examples
+   to avoid: "Broad + Smart Bidding = telescope + autopilot", "RSA as LEGO blocks",
+   "Audience signals = Bayesian prior", "Funnel as conditional probabilities".)
+
+5. **Specific vendor names as examples** when the book is generic. If the book says
+   "use a CRM" without naming brands, do NOT add "(e.g. HubSpot, Salesforce,
+   Pipedrive)". (Real examples added by mistake: Zapier, ActiveCampaign, plus LLM
+   vendor names like GPT/Claude/Gemini when the book only said "language models".)
+   Only name vendors the book itself names.
+
+6. **Expansion of a prose concept into an official formula or structured notation.**
+   If the book describes a mechanic in qualitative prose (e.g. "Ad Rank is
+   calculated based on bid, ad quality, and landing experience"), do NOT rewrite
+   it as the product's official formula (e.g. "Ad Rank = bid × Quality Score
+   (expected CTR + ad relevance + landing experience) + ext impact + context").
+   The formula may be correct in the broader product documentation, but the book
+   did not state it that way. Keep the book's level of abstraction.
+
+7. **Standard industry taxonomies imposed over the book's own categorization.** If
+   the book proposes its own tripartition / list / segmentation, do NOT overwrite
+   or "enrich" it with the standard textbook taxonomy from your training. Examples
+   of this failure mode:
+   - The book uses "capture demand / create demand / reactivation" → do NOT
+     restructure into "Awareness / Consideration / Conversion / Retention" funnel.
+   - The book lists three diagnostic KPIs (impression, click, CTR) → do NOT expand
+     to "Search impression share, Quality Score, Position, Bounce rate, LTV/CAC".
+   - The book defines five funnel stages → do NOT remap them onto AARRR or any
+     other model.
+   The book's categorization may be less canonical than the textbook version, but
+   the user is studying the book, not the textbook. Preserve the book's structure.
+
+### The labelling convention for justified non-grounded additions
+
+Sometimes — after applying the discipline above — you still judge that a non-grounded
+addition is useful to the reader (a well-known external pointer, a standard formula
+the book references only qualitatively, a clarifying example the book omits). For
+these cases there is an explicit labelling convention.
+
+**An addition correctly labelled `[non dal libro]` is the right behavior, not a
+failure.** It is transparency: the reader sees both the book's content and the bridge
+to external knowledge, and knows which is which. The failure mode is the **silent
+addition** — the unlabelled completion that the reader will mistake for the book's
+content. An audit reviewer who treats a labelled addition the same as a silent
+addition is itself reviewing incorrectly.
+
+How to label:
+
+- Use the marker **`[non dal libro]`** (Italian) or **`[not from the book]`** (English)
+  — match the skill's language.
+- The label must be on the same paragraph as the addition, not buried in a footnote.
+- A short reason or pointer is preferred: `[non dal libro — feature standard di
+  Google Ads]` is better than `[non dal libro]` alone.
+
+Examples of correct labelled additions:
+
+- *"Cannibalizzazione Search brand: il libro identifica il problema; la soluzione
+  operativa più comune in Google Ads è la feature 'brand exclusions' [non dal libro
+  — termine non usato esplicitamente nel testo]."*
+- *"Use a CRM (HubSpot, Salesforce, etc. [non dal libro — esempi di vendor; il
+  testo non nomina nessuno specifico])."*
+
+### When in doubt, write the absence
+
+If a chapter clearly refers to a topic but the book does NOT supply the operational
+content (scripts, templates, exact thresholds, case studies), do NOT fill the gap
+from training. Instead, write a brief "Note: parts the book does not detail" section
+at the bottom of that chapter file, listing what the book references without
+supplying. This is honest, lets the user know where to look elsewhere, and avoids
+the temptation to complete from training.
+
+### Future enhancement candidate
+
+A standalone `book-to-skill-audit` skill is a planned evolution: it would automate
+the cold-start grounding verification (read full_text + generated files; report
+findings by severity; check labelling convention compliance) as a standardized
+post-process step. For now this verification is done manually by spawning an
+independent agent with explicit grounding criteria. The standalone skill would make
+the audit step repeatable and consistent across conversions, valuable for commercial
+use of book-to-skill.
+
+---
+
 ## Step 7 — Generate chapter summaries
 
 **TOKEN BUDGET RULE — CRITICAL:**
@@ -519,3 +680,11 @@ Usage:
 6. **Chapter files are on-demand** — they don't count against skill budget until loaded
 7. **Never copy raw book text** — always synthesize, summarize, extract signal
 8. **Topic index is critical** — it's how the agent navigates to the right chapter file
+9. **Ground every claim** — every framework, principle, technique, anti-pattern, named
+   tool, number, threshold, duration, and cadence must be traceable to the source text.
+   See Step 6.5 for the discipline and the labelling convention for justified
+   non-grounded additions.
+10. **Label non-grounded additions inline** — use `[non dal libro]` / `[not from the
+    book]` markers when an addition cannot be grounded. Better an explicit label than
+    silent completion that the reader will mistake for the book's content. A correctly
+    labelled addition is transparency, not failure; the failure is the silent addition.
