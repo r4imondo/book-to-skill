@@ -418,6 +418,34 @@ as a sharpening of judgment, not as a license for timidity.
    The book's categorization may be less canonical than the textbook version, but
    the user is studying the book, not the textbook. Preserve the book's structure.
 
+8. **Qualitative directive expanded into formal ordering, rationale, named
+   consequence, or taxonomy.** When the book provides a qualitative directive —
+   extremes without ordering, a principle without rationale, a prescription
+   without a named technical consequence — do NOT add formal ordering, rationale,
+   named consequence, or taxonomy unless textually present in the book. The model
+   tends to "fill" both explanatory space (in descriptive/strategic books) and
+   operational space (in prescriptive/tactical books) — both are the same failure
+   mode in different forms. Real examples from two audits on books in different
+   languages and editorial styles:
+   - **Taxonomy expansion** (descriptive book): the book stated only "native
+     smart bidding sits at the lower end of bidding maturity, while propensity
+     modelling would sit higher" — two extremes, no ordering. The synthesis
+     built a 4-rung ordered scale ("Lower / Mid / Upper-mid / Higher end") as if
+     the book had defined four levels.
+   - **Action expansion** (prescriptive book): the book said "monitor schedules
+     and geographies regularly to cut waste". The synthesis added "reduce time
+     slots with low CVR / reduce regions with CPA above target" as if these
+     specific actions were the book's prescription — they are consultant
+     practice, not the book.
+   - **Rationale expansion**: the book said "Avoid minimum CPCs". The synthesis
+     added "(interferes with learning)" as the inferred reason — the reason was
+     never stated. Same pattern with "starves system liquidity" added as the
+     reason for "avoid over-using negatives".
+   When the book leaves explanatory or operational space (an extreme without a
+   middle, a directive without a rationale, a principle without a named
+   consequence), do NOT fill it from training. Keep the book's level of
+   specificity, or label the addition with the convention below.
+
 ### The labelling convention for justified non-grounded additions
 
 Sometimes — after applying the discipline above — you still judge that a non-grounded
