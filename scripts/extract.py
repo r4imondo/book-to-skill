@@ -572,13 +572,28 @@ def extract_with_docling(pdf_path: str) -> str | None:
     """Layout-aware extraction using Docling. Best for technical books with tables and code."""
     try:
         from docling.document_converter import DocumentConverter
-        from docling.datamodel.pipeline_options import PdfPipelineOptions
+        from docling.datamodel.pipeline_options import (
+            PdfPipelineOptions,
+            AcceleratorOptions,
+            AcceleratorDevice,
+        )
         from docling.datamodel.base_models import InputFormat
         from docling.document_converter import PdfFormatOption
 
         pipeline_options = PdfPipelineOptions()
         pipeline_options.do_ocr = False
         pipeline_options.do_table_structure = True
+        # Force CPU to avoid an upstream bug in transformers/rt_detr_v2 (used by
+        # Docling for layout detection): rt_detr_v2 builds positional embeddings
+        # with dtype=float64, which Apple Silicon MPS rejects at allocation.
+        # PYTORCH_ENABLE_MPS_FALLBACK=1 does NOT intercept this (it is a type
+        # error at construction, not an unsupported operator dispatch). CPU
+        # works on every platform; when transformers upstream fixes the dtype
+        # (or on CUDA/Linux installs where MPS is irrelevant), this can be
+        # switched to AcceleratorDevice.AUTO without other changes.
+        pipeline_options.accelerator_options = AcceleratorOptions(
+            device=AcceleratorDevice.CPU
+        )
 
         converter = DocumentConverter(
             format_options={
@@ -589,7 +604,15 @@ def extract_with_docling(pdf_path: str) -> str | None:
         return result.document.export_to_markdown()
     except ImportError:
         return None
-    except Exception:
+    except Exception as e:
+        # Log on stderr instead of swallowing silently: if Docling fails for any
+        # future reason (model load, GPU/CPU edge case, file format quirk), we
+        # want to see it in the log instead of discovering it from a silent
+        # fallback to pdftotext that loses table structure without warning.
+        print(
+            f"Docling extraction failed: {type(e).__name__}: {e}",
+            file=sys.stderr,
+        )
         return None
 
 
